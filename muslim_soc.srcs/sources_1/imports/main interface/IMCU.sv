@@ -76,13 +76,6 @@ wire [DATA_WIDTH-1:0] output_port [(1<<MAIN_ADDRESS_BITS)-1:0];
     
     
 
-mux #(.WIDTH(DATA_WIDTH),
-      .SEL_BITS(MAIN_ADDRESS_BITS))
-      MUX_U(.in(output_port), 
-            .sel(address_main_memory),
-            .out(mem_out));
-
- 
 genvar j;
 generate
     for (j = 0; j < NUM_MULTIPLIERS; j = j + 1) begin : assign_m
