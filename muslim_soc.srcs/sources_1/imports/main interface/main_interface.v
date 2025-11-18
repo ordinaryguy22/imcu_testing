@@ -48,12 +48,12 @@ module main_interface(
 	wire [30:0] final_address;
 	wire [5:0]  address_input_buffer;
 	wire [6:0]  address_main_memory;
-    wire [31:0] imcu_mem_in;
-	wire [31:0] imcu_buffer_in;
-	wire [31:0] imcu_out;
-	wire [31:0] output_buffer_lsw; //lower 32 bits of output buffer
-	wire [31:0] output_buffer_msw; //top 32 bits of output buffer
-    
+    wire [7:0] imcu_mem_in;
+	wire [7:0] imcu_buffer_in;
+	wire [7:0] imcu_out;
+	wire [7:0] output_buffer_lsw; //lower 32 bits of output buffer
+	wire [7:0] output_buffer_msw; //top 32 bits of output buffer
+    wire [15:0] MAC_Result;
     
 	interface_decoder interface_decoder_init (
         .clk(clk),
@@ -126,23 +126,24 @@ module main_interface(
 		 .dma_stall          (dma_stall)                         
 	);
 	
-	IMCU IMCU_init (
-    .address_input_buffer(address_input_buffer),
-    .address_main_memory(address_main_memory[6:0]),
-    .BL(DMA_RData), //weightsssss
-    .BLA(DMA_RData), //inputttttt
-    .clk(clk),
-    .IMC(IMC),
-    .EN_IB(EN_IB),
-    .EN_W(EN_W),
-    .read(read_imcu),
-    .write(write_imcu),
-    .mem_out(imcu_out), 
-	.latch_MC_En(latch_MC_En),
-	.MC(MC),
-	.tree_out_lsw(output_buffer_lsw),// lower 32 bits of output buffer
-	.tree_out_msw(output_buffer_msw) // upper 32 bits of output buffer
-	);
+
+	
+	PE_Tiles_50 PE_init(
+                     .address_input_buffer(address_input_buffer),
+                       .address_main_memory(address_main_memory[6:0]),
+                       .BL(DMA_RData), //weightsssss
+                       .BLA(DMA_RData), //inputttttt
+                       .clk(clk),
+                       .IMC(IMC),
+                       .EN_IB(EN_IB),
+                       .EN_W(EN_W),
+                       .read(read_imcu),
+                       .write(write_imcu),
+                       .mem_out(imcu_out), 
+                       .latch_MC_En(latch_MC_En),
+                       .MC(MC),
+                       .MAC_result(MAC_Result)              
+        );
 	
 //	always @(posedge clk, negedge reset_n) begin 
 always @(*) begin //running combinationally

@@ -33,8 +33,8 @@ module interface_decoder (
 	 output Interrupt,
 	  
 	 // adder tree output
-	 input [31:0] output_buffer_lsw, //lower 32 bits of output buffer
-	 input [31:0] output_buffer_msw //top 32 bits of output buffer
+	 input [7:0] output_buffer_lsw, //lower 32 bits of output buffer
+	 input [7:0] output_buffer_msw //top 32 bits of output buffer
 );
 	
    localparam ADDRS_CTRL_REG1 = 32'h30000000;

@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module PE_Tiles #(parameter DATA_WIDTH = 8,
+module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
               parameter NUM_MULTIPLIERS = 384/(3*DATA_WIDTH),
               parameter MAIN_ADDRESS_BITS = $clog2(NUM_MULTIPLIERS * 3),
               parameter IB_ADDRESS_BITS = $clog2(NUM_MULTIPLIERS * 3 / 2)
@@ -47,39 +47,40 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     input [DATA_WIDTH-1:0] BL, BLA;
     output [DATA_WIDTH-1:0]mem_out;
     output reg   MC,latch_MC_En;
+    output [DATA_WIDTH-1:0] MAC_result;
+
     wire [DATA_WIDTH-1:0] Lq [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH-1:0] highq [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH-1:0] BLB, C0L, WL_SL, stored_value_bar1, stored_value_bar2, out1,out2;
     
     wire [DATA_WIDTH:0] S [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH:0] S_not [NUM_MULTIPLIERS-1:0];
-    wire WL_N, WL_SH, read,write, rst;
+    wire WL_N, WL_SH, rst;
     wire [NUM_MULTIPLIERS-1:0] OUT; //A
     wire [(1<<MAIN_ADDRESS_BITS)-1:0] Dout;
     assign BLB = ~BL;
     
-    wire [(2*DATA_WIDTH)-1:0] m [NUM_MULTIPLIERS-1:0];
+    wire [(2*DATA_WIDTH)-1:0] m [49:0];
     wire [DATA_WIDTH-1:0] output_buffer_lsw [49:0]; //lower significant word[32 bits]
     wire [DATA_WIDTH-1:0] output_buffer_msw [49:0]; //Upper significant word[32 bits]
     wire [DATA_WIDTH-1:0] output_port [(1<<MAIN_ADDRESS_BITS)-1:0];
-    output [DATA_WIDTH-1:0] MAC_result;
 
     
 genvar i;
 generate    
-    for(i=0;i<50;i=i+1) begin: PE_Inst
+    for(i=0;i<50;i=i+1) begin: IMCU_Gen
     IMCU IMCU_init (
     .address_input_buffer(address_input_buffer), //ok
-    .address_main_memory(address_main_memory[6:0]), //ok
-    .BL(DMA_RData),//ok
-    .BLA(DMA_RData),//ok
+    .address_main_memory(address_main_memory), //ok
+    .BL(BL),//ok
+    .BLA(BLA),//ok
     .clk(clk),//ok
     .IMC(IMC),//ok
     .EN_IB(EN_IB),//ok
     .EN_W(EN_W),//ok
-    .read(read_imcu),//ok
-    .write(write_imcu),//ok
-    .mem_out(imcu_out), 
+    .read(read),//ok
+    .write(write),//ok
+    .mem_out(imcu), 
     .latch_MC_En(latch_MC_En),//ok
     .MC(MC),//ok
     .tree_out_lsw(output_buffer_lsw[i]),// lower 8 bits of output buffer
@@ -95,7 +96,7 @@ generate
     end
 endgenerate
   
-adder_tree u_adder_tree (
+adder_tree_50 u_adder_tree (
     .A1 (m[0]),   .A2 (m[1]),   .A3 (m[2]),   .A4 (m[3]),   .A5 (m[4]),
     .A6 (m[5]),   .A7 (m[6]),   .A8 (m[7]),   .A9 (m[8]),   .A10(m[9]),
     .A11(m[10]),  .A12(m[11]),  .A13(m[12]),  .A14(m[13]),  .A15(m[14]),

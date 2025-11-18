@@ -1,8 +1,8 @@
 module dma_controller#(
     parameter STRIDE = 3,
     parameter INITIAL_ADDRS = 15,
-    parameter DATA_WIDTH = 32,
-    parameter NUM_LAYERS = 4100/(3*DATA_WIDTH),
+    parameter DATA_WIDTH = 8,
+    parameter NUM_LAYERS = 384/(3*DATA_WIDTH),
     parameter MAIN_ADDRESS_BITS = $clog2(NUM_LAYERS * 3),
     parameter IB_ADDRESS_BITS = $clog2(NUM_LAYERS * 3 / 2)
 )(
