@@ -9,8 +9,8 @@ module main_interface(
 	output DMA_WEN,
 	output DMA_REN,
 	//memory data/adddress
-	input  [31:0] DMA_RData, // Data from memory to IMCU [Write Cycle]
-	output [31:0] DMA_WData, // Data from IMCU to memory [READ cycle]
+	input  [7:0] DMA_RData, // Data from memory to IMCU [Write Cycle]
+	output [7:0] DMA_WData, // Data from IMCU to memory [READ cycle]
 	output [31:0] DMA_ADDRS, // address for datamemory indexing 
 	//output to pipeline register
 	output [31:0] DATA_OUT,
@@ -46,8 +46,8 @@ module main_interface(
 	wire [14:0] initial_addrs_data_mem;
 	wire [14:0] initial_addrs_imcu;
 	wire [30:0] final_address;
-	wire [5:0]  address_input_buffer;
-	wire [6:0]  address_main_memory;
+	wire [4:0]  address_input_buffer;
+	wire [5:0]  address_main_memory;
     wire [7:0] imcu_mem_in;
 	wire [7:0] imcu_buffer_in;
 	wire [7:0] imcu_out;
@@ -130,7 +130,7 @@ module main_interface(
 	
 	PE_Tiles_50 PE_init(
                      .address_input_buffer(address_input_buffer),
-                       .address_main_memory(address_main_memory[6:0]),
+                       .address_main_memory(address_main_memory[4:0]),
                        .BL(DMA_RData), //weightsssss
                        .BLA(DMA_RData), //inputttttt
                        .clk(clk),

@@ -67,7 +67,7 @@ wire [DATA_WIDTH-1:0] output_port [(1<<MAIN_ADDRESS_BITS)-1:0];
     always @(*) begin
         latch_MC_En <= 1'b0;
         MC          <= 1'b0;
-        if(WL_SL[31] == 1)begin
+        if(WL_SL[7] == 1)begin
             latch_MC_En <= 1'b1;
             MC          <= 1'b1;
         end

@@ -6,10 +6,10 @@
 module IMAX (                     // In-Memory Accelerator Exchange               
               
              // Master 
-             input  [31:0] DMA_ReadData, 
+             input  [7:0] DMA_ReadData, 
              output DMA_Write,
 	         output DMA_Read,	
-	         output [31:0] DMA_WriteData, 
+	         output [7:0] DMA_WriteData, 
 	         output [31:0] DMA_Address,
              output Master_Route_Out,
              output Master_Route_In,

@@ -128,7 +128,7 @@
   //$readmemh("C:/04_FYP/06_SOC/New Integration/version7/SOC_IMCU_integ/SOC_IMCU_integ/hex_code_core.txt", DUT.inst_mem_inst.dmem);
   //$readmemh("C:/04_FYP/06_SOC/New Integration/version7/SOC_IMCU_integ/SOC_IMCU_integ/hex_code_imcu_polling.txt", DUT.inst_mem_inst.dmem);
 //$readmemh("C:/04_FYP/06_SOC/New Integration/version8/SOC_IMCU_integ/SOC_IMCU_integ/data.hex", DUT.data_mem_inst.dmem);
- $readmemh("D:/uni/fyp/version8/SOC_IMCU_integ/SOC_IMCU_integ/data.hex", DUT.data_mem_inst.dmem);
+$readmemh("D:/uni/fyp/version8/SOC_IMCU_integ/SOC_IMCU_integ/data.hex", DUT.data_mem_inst.dmem);
 $readmemh("C:/Users/M Talha/Desktop/interrupt_multiply_hex.txt", DUT.inst_mem_inst.dmem);
    end // wait 
 

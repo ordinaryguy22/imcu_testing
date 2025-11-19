@@ -34,7 +34,7 @@
     <Option Name="DSAVendor" Val="xilinx"/>
     <Option Name="DSABoardId" Val="nexys-a7-100t"/>
     <Option Name="DSANumComputeUnits" Val="60"/>
-    <Option Name="WTXSimLaunchSim" Val="367"/>
+    <Option Name="WTXSimLaunchSim" Val="401"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -523,15 +523,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/counter_n_bit.sv">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/counter_n_bit.sv"/>
-          <Attr Name="ImportTime" Val="1745662528"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/src/soc/core/crypto/crypto_alu_mux.sv">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/core/crypto/crypto_alu_mux.sv"/>
@@ -589,15 +580,6 @@
       <File Path="$PSRCDIR/sources_1/imports/src/soc/debug/debug_top.sv">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/debug/debug_top.sv"/>
-          <Attr Name="ImportTime" Val="1745662528"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/decoder.sv">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/decoder.sv"/>
           <Attr Name="ImportTime" Val="1745662528"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -774,24 +756,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/sev_seg_controller.sv">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/sev_seg_controller.sv"/>
-          <Attr Name="ImportTime" Val="1745662528"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/sev_seg_decoder.sv">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/sev_seg_decoder.sv"/>
-          <Attr Name="ImportTime" Val="1745662528"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/src/soc/WishboneInterconnect/wb_intercon.sv">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/WishboneInterconnect/wb_intercon.sv"/>
@@ -810,9 +774,9 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/soc/rv32i_soc_fpga_top.sv">
+      <File Path="$PSRCDIR/sources_1/imports/src/tb/rv32i_soc_tb.sv">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/rv32i_soc_fpga_top.sv"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/tb/rv32i_soc_tb.sv"/>
           <Attr Name="ImportTime" Val="1745662528"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -849,26 +813,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/adder tree/fulladder.v">
-        <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/SOC_IMCU_integ/SOC_IMCU_integ.srcs/sources_1/imports/adder tree/fulladder.v"/>
-          <Attr Name="ImportTime" Val="1707844612"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/main interface/mux.sv">
-        <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../version5_with_mult/SOC_IMCU_Integration/SOC_IMCU_Integration.srcs/sources_1/imports/main interface/mux.sv"/>
-          <Attr Name="ImportTime" Val="1742126030"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/adder tree/comp6to2_64.v">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
@@ -889,11 +833,11 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/soc/uncore/gpio/bidirec.sv">
+      <File Path="$PSRCDIR/sources_1/imports/adder tree/fulladder.v">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/uncore/gpio/bidirec.sv"/>
-          <Attr Name="ImportTime" Val="1745662528"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/SOC_IMCU_integ/SOC_IMCU_integ.srcs/sources_1/imports/adder tree/fulladder.v"/>
+          <Attr Name="ImportTime" Val="1707844612"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -979,6 +923,36 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/imports/src/soc/uncore/gpio/bidirec.sv">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/uncore/gpio/bidirec.sv"/>
+          <Attr Name="ImportTime" Val="1745662528"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/counter_n_bit.sv">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/counter_n_bit.sv"/>
+          <Attr Name="ImportTime" Val="1745662528"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/decoder.sv">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/decoder.sv"/>
+          <Attr Name="ImportTime" Val="1745662528"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/imports/src/tb/div_tb.sv">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
@@ -1019,6 +993,16 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/imports/main interface/mux.sv">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../version5_with_mult/SOC_IMCU_Integration/SOC_IMCU_Integration.srcs/sources_1/imports/main interface/mux.sv"/>
+          <Attr Name="ImportTime" Val="1742126030"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/imports/src/tb/pkg.sv">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
@@ -1039,6 +1023,16 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/imports/src/soc/rv32i_soc_fpga_top.sv">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/rv32i_soc_fpga_top.sv"/>
+          <Attr Name="ImportTime" Val="1745662528"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/imports/src/tb/rv32i_soc_jtag_tb.sv">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
@@ -1049,20 +1043,30 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/tb/rv32i_soc_tb.sv">
+      <File Path="$PSRCDIR/sources_1/imports/src/tb/rv32i_tb.sv">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/tb/rv32i_soc_tb.sv"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/tb/rv32i_tb.sv"/>
           <Attr Name="ImportTime" Val="1745662528"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/src/tb/rv32i_tb.sv">
+      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/sev_seg_controller.sv">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/tb/rv32i_tb.sv"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/sev_seg_controller.sv"/>
+          <Attr Name="ImportTime" Val="1745662528"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/src/soc/sev-seg-controller/sev_seg_decoder.sv">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/RivRtos-qamars-work/RivRtos-qamars-work/src/soc/sev-seg-controller/sev_seg_decoder.sv"/>
           <Attr Name="ImportTime" Val="1745662528"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -1165,8 +1169,7 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="rv32i_soc_fpag_top"/>
-        <Option Name="TopAutoSet" Val="TRUE"/>
+        <Option Name="TopModule" Val="rv32i_soc_tb"/>
       </Config>
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
@@ -1193,10 +1196,8 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sim_1/imports/SOC_IMCU_integ/rv32i_soc_tb_behav.wcfg">
+      <File Path="$PSIMDIR/sim_1/behav/xsim/rv32i_soc_tb_behav.wcfg">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../SOC_IMCU_integ/SOC_IMCU_integ/rv32i_soc_tb_behav.wcfg"/>
-          <Attr Name="ImportTime" Val="1746386108"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
@@ -1236,11 +1237,12 @@
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="10">
-    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7a100tcsg324-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" WriteIncrSynthDcp="false" State="current" IncludeInArchive="true">
+    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7a100tcsg324-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2018"/>
         <Step Id="synth_design"/>
       </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2018"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>

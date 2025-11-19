@@ -19,9 +19,9 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module INPUT_BUFFER #(parameter ADDR = 6,parameter DATA_WIDTH = 32,
+module INPUT_BUFFER #(parameter ADDR = 6,parameter DATA_WIDTH = 8,
                   
-                      parameter X=42)
+                      parameter X=16)
                       (clk,Address, BL ,EN, C0L, OUT);
 input [ADDR-1:0] Address;
 input [DATA_WIDTH-1:0] BL , C0L;

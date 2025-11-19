@@ -171,13 +171,13 @@ localparam RESET                  = 0,    // 0
             WRITE_WEIGHT_initial: next_state = CHECK_COMPLETE_W;
             WRITE_WEIGHT:         next_state = CHECK_COMPLETE_W;
             //change 0.0.0.1
-            CHECK_COMPLETE_W:     next_state = (address_main_memory == 8'd41) ? WRITE_WEIGHT_FINAL : WRITE_WEIGHT ;
+            CHECK_COMPLETE_W:     next_state = (address_main_memory == 8'd16) ? WRITE_WEIGHT_FINAL : WRITE_WEIGHT ;
             WRITE_WEIGHT_FINAL:   next_state = DONE;
             
             
             WRITE_INPUT_initial:  next_state = CHECK_COMPLETE_IB;
             WRITE_INPUT:          next_state = CHECK_COMPLETE_IB;
-            CHECK_COMPLETE_IB:    next_state = (address_input_buffer == 6'd41) ? WRITE_INPUT_FINAL:WRITE_INPUT ;
+            CHECK_COMPLETE_IB:    next_state = (address_input_buffer == 6'd16) ? WRITE_INPUT_FINAL:WRITE_INPUT ;
             WRITE_INPUT_FINAL:    next_state = DONE;
             
             IMCU_to_memory_initial: next_state = CHECK_COMPLETE_MEM;

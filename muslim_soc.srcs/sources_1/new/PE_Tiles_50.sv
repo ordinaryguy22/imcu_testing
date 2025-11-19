@@ -46,9 +46,12 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     input clk, IMC, EN_IB,EN_W, read,write;
     input [DATA_WIDTH-1:0] BL, BLA;
     output [DATA_WIDTH-1:0]mem_out;
-    output reg   MC,latch_MC_En;
+    output reg   MC ;
+    output reg latch_MC_En  ;
     output [DATA_WIDTH-1:0] MAC_result;
-
+    
+    wire latch_MC_En_internal [49:0];
+    wire MC_internal [49:0];
     wire [DATA_WIDTH-1:0] Lq [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH-1:0] highq [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH-1:0] BLB, C0L, WL_SL, stored_value_bar1, stored_value_bar2, out1,out2;
@@ -81,8 +84,8 @@ generate
     .read(read),//ok
     .write(write),//ok
     .mem_out(imcu), 
-    .latch_MC_En(latch_MC_En),//ok
-    .MC(MC),//ok
+    .latch_MC_En(latch_MC_En_internal[i]),//ok
+    .MC(MC_internal[i]),//ok
     .tree_out_lsw(output_buffer_lsw[i]),// lower 8 bits of output buffer
     .tree_out_msw(output_buffer_msw[i]) // upper 8 bits of output buffer
     );
@@ -110,5 +113,33 @@ adder_tree_50 u_adder_tree (
 
     .tree_out(MAC_result)
 );
+
+ logic temp[0:49]; // temporary signals for the AND chain
+
+    // initialize first element
+    assign temp[0] = MC_internal[0];
+
+    genvar k;
+    generate
+        for (k = 1; k < 50; k = k + 1) begin : and_chain
+            assign temp[k] = temp[k-1] & MC_internal[k];
+        end
+    endgenerate
+
+    assign MC = temp[49]; // final AND of all 50 signals
+
+ logic temp2[0:49]; // temporary signals for the AND chain
+
+    // initialize first element
+    assign temp2[0] = latch_MC_En_internal[0];
+
+    genvar l;
+    generate
+        for (l = 1; l < 50; l = l + 1) begin : and_chain2
+            assign temp2[l] = temp2[l-1] & latch_MC_En_internal[l];
+        end
+    endgenerate
+
+    assign latch_MC_En = temp2[49]; // final AND of all 50 signals
     
 endmodule

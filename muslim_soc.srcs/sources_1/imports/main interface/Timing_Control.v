@@ -1,5 +1,5 @@
 
-module Timing_control #(parameter DATA_WIDTH = 32) (
+module Timing_control #(parameter DATA_WIDTH = 8) (
     input clk, IMC,
     output reg WL_N, WL_SH,
     output reg rst,

@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module CELL_ARRAY #(parameter DATA_WIDTH = 32) (
+module CELL_ARRAY #(parameter DATA_WIDTH = 8) (
     input clk,
     input WL,
     input [DATA_WIDTH-1:0] BL,
