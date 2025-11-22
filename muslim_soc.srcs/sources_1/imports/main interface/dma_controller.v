@@ -23,7 +23,7 @@ module dma_controller#(
     output reg        DMA_WEN,
     output reg        DMA_REN,
     output reg [DATA_WIDTH-1:0] DMA_WData,
-    output reg [DATA_WIDTH-1:0] DMA_ADDRS,
+    output reg [32-1:0] DMA_ADDRS,
     // IMCU connections
     input      [DATA_WIDTH-1:0] imcu_out,         // Data coming out of the IMCU
     output reg [IB_ADDRESS_BITS-1:0]  address_input_buffer,

@@ -376,11 +376,12 @@ module rv32i_soc #(
     IMAX  InMemory_Accelerator_Exchange(                                  
               
              // Master 
-             .DMA_ReadData(DMA_ReadData), 
+             .DMA_ReadData(DMA_ReadData[7:0]), 
              .DMA_Write(DMA_Write),
 	         .DMA_Read(DMA_Read),	
 	         .DMA_WriteData(DMA_WriteData), 
 	         .DMA_Address(DMA_Address),
+	         
              .Master_Route_Out(Master_Route_Out),
              .Master_Route_In(Master_Route_In),
 

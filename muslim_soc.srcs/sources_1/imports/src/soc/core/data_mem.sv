@@ -30,7 +30,7 @@ logic [$clog2(DEPTH)-1:0] word_addr;
 assign word_addr = adr_i[$clog2(DEPTH)+1:2];
 
 // inst memory here 
-logic [31:0] dmem [0:1024 - 1];
+logic [31:0] dmem [0:DEPTH - 1];
 
 always_ff @(posedge clk_i) begin 
     if(mem_write) begin 

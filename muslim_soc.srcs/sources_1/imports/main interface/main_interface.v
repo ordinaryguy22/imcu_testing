@@ -13,7 +13,7 @@ module main_interface(
 	output [7:0] DMA_WData, // Data from IMCU to memory [READ cycle]
 	output [31:0] DMA_ADDRS, // address for datamemory indexing 
 	//output to pipeline register
-	output [31:0] DATA_OUT,
+	output [31:0] DATA_OUT,  ///??????
 	//interrupt signals
 	//output TC,
 	//output MC,
@@ -130,7 +130,7 @@ module main_interface(
 	
 	PE_Tiles_50 PE_init(
                      .address_input_buffer(address_input_buffer),
-                       .address_main_memory(address_main_memory[4:0]),
+                       .address_main_memory(address_main_memory),
                        .BL(DMA_RData), //weightsssss
                        .BLA(DMA_RData), //inputttttt
                        .clk(clk),
