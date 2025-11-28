@@ -33,7 +33,7 @@ module dma_controller#(
     output reg        read_imcu,
     output reg        write_imcu,
     output reg        EN_W,
-    output reg        EN_IB,
+    output reg [49:0] EN_IB,
     // flags
     output         TC, // transaction complete
     output         AE, // address error
@@ -76,6 +76,8 @@ localparam RESET                  = 0,    // 0
     
     // State registers
     reg [3:0] state, next_state;
+    reg [63:0] EN_IB_internal;
+    wire [63:0]EN_IB_decoded;
     
     // Sequential logic: State Register
     always @(posedge clk or posedge reset) begin
@@ -88,22 +90,34 @@ localparam RESET                  = 0,    // 0
         RESET: begin
                 DMA_ADDRS            <= 0;
                 address_main_memory  <= 0;
+                EN_IB <= EN_IB_internal;
         end
         WRITE_WEIGHT_initial: begin
                 DMA_ADDRS            <= initial_addrs_data_mem;
                 address_main_memory  <= initial_addrs_imcu;
+                EN_IB = EN_IB_internal;
+
         end
         WRITE_WEIGHT:begin
                 DMA_ADDRS            <= DMA_ADDRS + increment_value_dmem;
                 address_main_memory  <= address_main_memory + increment_value_imcu;
+                EN_IB = EN_IB_internal;
+
         end    
         WRITE_INPUT_initial: begin
-               DMA_ADDRS            <= initial_addrs_data_mem;
+               DMA_ADDRS            <= initial_addrs_data_mem+(32'd16*ib_count*32'd4);
                address_input_buffer <= 6'b0;
+               EN_IB = EN_IB_decoded;
+
         end
         WRITE_INPUT: begin
                 DMA_ADDRS            <= DMA_ADDRS + increment_value_dmem;
                 address_input_buffer <= address_input_buffer + 1'b1;
+                EN_IB = EN_IB_decoded;
+        end
+        WRITE_INPUT_FINAL: begin
+             ib_count             = ib_count + 6'd1;
+
         end
         IMCU_to_memory_initial: begin
                 DMA_ADDRS            <= initial_addrs_data_mem;
@@ -148,7 +162,7 @@ localparam RESET                  = 0,    // 0
     assign TC = TC_reg;
     assign AE = AE_reg;
 
-    
+    reg [5:0] ib_count;
     
     
     
@@ -178,7 +192,7 @@ localparam RESET                  = 0,    // 0
             WRITE_INPUT_initial:  next_state = CHECK_COMPLETE_IB;
             WRITE_INPUT:          next_state = CHECK_COMPLETE_IB;
             CHECK_COMPLETE_IB:    next_state = (address_input_buffer == 6'd16) ? WRITE_INPUT_FINAL:WRITE_INPUT ;
-            WRITE_INPUT_FINAL:    next_state = DONE;
+            WRITE_INPUT_FINAL:    next_state = (ib_count==6'd50)?DONE:WRITE_INPUT_initial;
             
             IMCU_to_memory_initial: next_state = CHECK_COMPLETE_MEM;
             IMCU_to_memory:         next_state = CHECK_COMPLETE_MEM;
@@ -193,6 +207,8 @@ localparam RESET                  = 0,    // 0
         endcase
     end
     
+    Decoder #(.N(6), 
+              .X(1<<6)) d1(ib_count ,1, EN_IB_decoded);
     // Combinational logic: Output Logic
     always @(*) begin
         // Default values to prevent latch inference
@@ -204,7 +220,7 @@ localparam RESET                  = 0,    // 0
         read_imcu           = 1'b0;
         write_imcu          = 1'b0;
         EN_W                = 1'b0;
-        EN_IB               = 1'b0;
+        EN_IB_internal      = 50'b0;
         latch_En            = 1'b0;
 //        AE                  = 1'b0;
 //        TC                  = 1'b0;
@@ -221,7 +237,9 @@ localparam RESET                  = 0,    // 0
                 read_imcu             = 1'b0;
                 write_imcu            = 1'b0;
                 EN_W                  = 1'b0;
-                EN_IB                 = 1'b0;
+               ib_count = 6'd0;
+
+                EN_IB_internal                 = 50'b0;
                 latch_En              = 1'b0;
             end
     
@@ -235,7 +253,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b0;
+                EN_IB_internal                = 50'b0;
                 latch_En             = 1'b0;
                 imcu_mem_in          = ReadDataM;  // data from memory to IMCU[weight layer]
             end
@@ -250,7 +268,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b0;
+                EN_IB_internal                = 50'b0;
                 latch_En             = 1'b0;
                 imcu_mem_in          = ReadDataM;
             end
@@ -263,7 +281,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b0;
+                EN_IB_internal                = 50'b0;
                 latch_En             = 1'b0;
             end
            WRITE_WEIGHT_FINAL: begin // hold the write signal for the final Transaction
@@ -274,7 +292,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b0;
+                EN_IB_internal                = 50'b0;
                 latch_En             = 1'b0;
            end
     
@@ -287,10 +305,11 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b1;
+//                EN_IB                = 1'b1;
+//                ib_count             = 6'b0;
                 //DMA_ADDRS            = initial_addrs_data_mem;
                 //address_input_buffer = 6'b0;
-                EN_IB                = 1'b1;
+//                EN_IB                = 1'b1;
                 latch_En             = 1'b0;
                 imcu_buffer_in       = ReadDataM;
             end
@@ -303,10 +322,10 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b1;
+//                EN_IB                = 1'b1;
 //                DMA_ADDRS            = DMA_ADDRS + increment_value_dmem;
 //                address_input_buffer = address_input_buffer + 1'b1;
-                EN_IB                = 1'b1;
+//                EN_IB                = 1'b1;
                 latch_En             = 1'b0;
                 imcu_buffer_in       = ReadDataM;  // data from memory to IMCU[input buffer]
             end
@@ -319,7 +338,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b1;
+//                EN_IB                = 1'b1;
                 latch_En             = 1'b0;
             end
     
@@ -331,7 +350,8 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b0;
                 DMA_WEN              = 1'b0;
                 DMA_REN              = 1'b1;
-                EN_IB                = 1'b1;
+
+//                EN_IB                = 1'b1;
                 latch_En             = 1'b0;
             end
     
@@ -346,7 +366,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b1;
                 DMA_WEN              = 1'b1;
                 DMA_REN              = 1'b0;
-                EN_IB                = 1'b0;
+                EN_IB                = 50'b0;
                 latch_En             = 1'b0;
                 DMA_WData            = imcu_out;
             end
@@ -361,7 +381,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b1;
                 DMA_WEN              = 1'b1;
                 DMA_REN              = 1'b0;
-                EN_IB                = 1'b0;
+                EN_IB                = 50'b0;
                 latch_En             = 1'b0;
                 DMA_WData            = imcu_out;
             end    
@@ -373,7 +393,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b1;
                 DMA_WEN              = 1'b1;
                 DMA_REN              = 1'b0;
-                EN_IB                = 1'b0;
+                EN_IB                = 50'b0;
                 latch_En             = 1'b0;
             end    
             IMCU_to_memory_FINAL: begin
@@ -384,7 +404,7 @@ localparam RESET                  = 0,    // 0
                 read_imcu            = 1'b1;
                 DMA_WEN              = 1'b1;
                 DMA_REN              = 1'b0;
-                EN_IB                = 1'b0;
+                EN_IB                = 50'b0;
                 latch_En             = 1'b0;
             end 
             

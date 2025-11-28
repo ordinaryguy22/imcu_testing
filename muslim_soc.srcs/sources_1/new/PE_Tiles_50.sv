@@ -43,7 +43,8 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
     
 input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     input [MAIN_ADDRESS_BITS-1:0] address_main_memory;
-    input clk, IMC, EN_IB,EN_W, read,write;
+    input clk, IMC,EN_W, read,write;
+    input [49:0] EN_IB;
     input [DATA_WIDTH-1:0] BL, BLA;
     output [DATA_WIDTH-1:0]mem_out;
     output reg   MC ;
@@ -79,7 +80,7 @@ generate
     .BLA(BLA),//ok
     .clk(clk),//ok
     .IMC(IMC),//ok
-    .EN_IB(EN_IB),//ok
+    .EN_IB(EN_IB[i]),//ok
     .EN_W(EN_W),//ok
     .read(read),//ok
     .write(write),//ok

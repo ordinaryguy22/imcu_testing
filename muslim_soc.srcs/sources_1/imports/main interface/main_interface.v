@@ -36,7 +36,7 @@ module main_interface(
 	wire read_imcu;
 	wire write_imcu;
 	wire EN_W;
-	wire EN_IB;
+	wire [49:0] EN_IB;
 	wire rst;
 	wire start;
 	wire IMC;
