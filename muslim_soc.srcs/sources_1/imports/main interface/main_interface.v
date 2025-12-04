@@ -54,6 +54,7 @@ module main_interface(
 	wire [7:0] output_buffer_lsw; //lower 32 bits of output buffer
 	wire [7:0] output_buffer_msw; //top 32 bits of output buffer
     wire [15:0] MAC_Result;
+    wire [4:0] address_weight_buffer;
     
 	interface_decoder interface_decoder_init (
         .clk(clk),
@@ -123,7 +124,8 @@ module main_interface(
 		 .AE                 (AE),                     
 		 .latch_En           (latch_En),
 		// .dma_has_access(),//.dma_has_access(dma_has_access),
-		 .dma_stall          (dma_stall)                         
+		 .dma_stall          (dma_stall)  ,
+		 .address_weight_buffer (address_weight_buffer)                      
 	);
 	
 
@@ -142,7 +144,8 @@ module main_interface(
                        .mem_out(imcu_out), 
                        .latch_MC_En(latch_MC_En),
                        .MC(MC),
-                       .MAC_result(MAC_Result)              
+                       .MAC_result(MAC_Result) , 
+                       .address_weight_buffer(address_weight_buffer)            
         );
 	
 //	always @(posedge clk, negedge reset_n) begin 

@@ -38,7 +38,9 @@ module dma_controller#(
     output         TC, // transaction complete
     output         AE, // address error
     output reg        latch_En,
-    input             dma_stall 
+    input             dma_stall ,
+    output reg [4:0] address_weight_buffer
+
 );
 
     // Wires for stride increment values
@@ -54,7 +56,8 @@ module dma_controller#(
 
     // State encoding (Decimal)
 localparam RESET                  = 0,    // 0
-
+           
+           
            WRITE_WEIGHT_initial   = 1,    // 1
            WRITE_WEIGHT           = 2,    // 2
            CHECK_COMPLETE_W       = 3,    // 3
@@ -71,11 +74,13 @@ localparam RESET                  = 0,    // 0
            IMCU_to_memory_FINAL   = 12,   // 12
            
            ERROR                  = 13,   // 13
-           DONE                   = 14;   // 14
-
-    
+           DONE                   = 14,   // 14
+           LOAD_WEIGHT_initial     =15,
+           LOAD_WEIGHT_final       =16,
+           LOAD_WEIGHT             =17,
+           CHECK_COMPLETE_final    =18;
     // State registers
-    reg [3:0] state, next_state;
+    reg [4:0] state, next_state;
     reg [63:0] EN_IB_internal;
     wire [63:0]EN_IB_decoded;
     
@@ -90,8 +95,25 @@ localparam RESET                  = 0,    // 0
         RESET: begin
                 DMA_ADDRS            <= 0;
                 address_main_memory  <= 0;
+                address_weight_buffer <= 0;
                 EN_IB <= EN_IB_internal;
         end
+        LOAD_WEIGHT_initial: begin
+            DMA_ADDRS            <= initial_addrs_data_mem;
+            address_weight_buffer <= 0;
+
+        end
+        
+        
+        LOAD_WEIGHT: begin
+        address_weight_buffer <= address_weight_buffer + 5'b1 ;
+        DMA_ADDRS            <= DMA_ADDRS + increment_value_dmem;
+
+        end
+        CHECK_COMPLETE_final: begin
+        
+        end
+        
         WRITE_WEIGHT_initial: begin
                 DMA_ADDRS            <= initial_addrs_data_mem;
                 address_main_memory  <= initial_addrs_imcu;
@@ -174,7 +196,9 @@ localparam RESET                  = 0,    // 0
                     if (dir == 0)
                         next_state = IMCU_to_memory_initial;
                     else if (type == 0)
-                        next_state = WRITE_WEIGHT_initial;
+//                        next_state = WRITE_WEIGHT_initial;
+                          next_state = LOAD_WEIGHT_initial;
+
                     else
                         next_state = WRITE_INPUT_initial;
                 end else begin
@@ -182,8 +206,14 @@ localparam RESET                  = 0,    // 0
                 end
             end
     
+            LOAD_WEIGHT_initial: next_state = LOAD_WEIGHT;
+            LOAD_WEIGHT_final: next_state = WRITE_WEIGHT_initial;
+            LOAD_WEIGHT: next_state = CHECK_COMPLETE_final;
+            CHECK_COMPLETE_final: next_state = (address_weight_buffer == 5'd16)? LOAD_WEIGHT_final:LOAD_WEIGHT;
             WRITE_WEIGHT_initial: next_state = CHECK_COMPLETE_W;
             WRITE_WEIGHT:         next_state = CHECK_COMPLETE_W;
+            
+            
             //change 0.0.0.1
             CHECK_COMPLETE_W:     next_state = (address_main_memory == 8'd16) ? WRITE_WEIGHT_FINAL : WRITE_WEIGHT ;
             WRITE_WEIGHT_FINAL:   next_state = DONE;

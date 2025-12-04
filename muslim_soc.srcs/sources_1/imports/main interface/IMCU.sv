@@ -15,6 +15,12 @@ module IMCU #(parameter DATA_WIDTH = 8,
 				EN_W,
 				read,
 				write,
+				OUT,
+				WL_N,
+				WL_SH,
+				rst,
+				C0L,
+				WL_SL,
 				mem_out,
 				latch_MC_En,
 				MC,
@@ -29,16 +35,19 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
 input [MAIN_ADDRESS_BITS-1:0] address_main_memory;
 input clk, IMC, EN_IB,EN_W, read,write;
 input [DATA_WIDTH-1:0] BL, BLA;
+input [NUM_MULTIPLIERS-1:0] OUT; //A
+input WL_N, WL_SH,rst;
+input [DATA_WIDTH-1:0] C0L, WL_SL;
+
 output [DATA_WIDTH-1:0]mem_out;
 output reg   MC,latch_MC_En;
 wire [DATA_WIDTH-1:0] Lq [NUM_MULTIPLIERS-1:0];
 wire [DATA_WIDTH-1:0] highq [NUM_MULTIPLIERS-1:0];
-wire [DATA_WIDTH-1:0] BLB, C0L, WL_SL, stored_value_bar1, stored_value_bar2, out1,out2;
+wire [DATA_WIDTH-1:0] BLB, stored_value_bar1, stored_value_bar2, out1,out2;
 
 wire [DATA_WIDTH:0] S [NUM_MULTIPLIERS-1:0];
 wire [DATA_WIDTH:0] S_not [NUM_MULTIPLIERS-1:0];
-wire WL_N, WL_SH, read,write, rst;
-wire [NUM_MULTIPLIERS-1:0] OUT; //A
+wire read,write;
 wire [(1<<MAIN_ADDRESS_BITS)-1:0] Dout;
 assign BLB = ~BL;
 
@@ -83,11 +92,8 @@ generate
     end
 endgenerate
 
-Timing_control #(.DATA_WIDTH(DATA_WIDTH)) TC1(clk, IMC, WL_N, WL_SH, rst, C0L, WL_SL);
 
-INPUT_BUFFER #(.ADDR(IB_ADDRESS_BITS),
-               .DATA_WIDTH(DATA_WIDTH),
-               .X(NUM_MULTIPLIERS)) IB1(clk,address_input_buffer, BLA, EN_IB,C0L,OUT);
+
 
 Decoder #(.N(MAIN_ADDRESS_BITS), 
           .X(1<<MAIN_ADDRESS_BITS)) d1(address_main_memory ,EN_W, Dout);

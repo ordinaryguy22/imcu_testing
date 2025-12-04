@@ -6,6 +6,7 @@ verilog xil_defaultlib  --include "../../../../muslim_soc.srcs/sources_1/imports
 "../../../../muslim_soc.srcs/sources_1/imports/main interface/RCA_Nbit.v" \
 "../../../../muslim_soc.srcs/sources_1/imports/main interface/START_FSM.v" \
 "../../../../muslim_soc.srcs/sources_1/imports/main interface/Timing_Control.v" \
+"../../../../muslim_soc.srcs/sources_1/new/WEIGHT_BUFFER.v" \
 "../../../../muslim_soc.srcs/sources_1/imports/adder tree/adder_tree.v" \
 "../../../../muslim_soc.srcs/sources_1/new/adder_tree_50.v" \
 "../../../../muslim_soc.srcs/sources_1/imports/new/clockcycle_counter.v" \

@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+// PE_ROW
 module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
               parameter NUM_MULTIPLIERS = 384/(3*DATA_WIDTH),
               parameter MAIN_ADDRESS_BITS = $clog2(NUM_MULTIPLIERS * 3),
@@ -27,6 +27,8 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
               )(
                 address_input_buffer,
 				address_main_memory,
+				address_weight_buffer,
+
 				BL, 
 				BLA, 
 				clk,
@@ -46,6 +48,7 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     input clk, IMC,EN_W, read,write;
     input [49:0] EN_IB;
     input [DATA_WIDTH-1:0] BL, BLA;
+    input [4:0] address_weight_buffer;
     output [DATA_WIDTH-1:0]mem_out;
     output reg   MC ;
     output reg latch_MC_En  ;
@@ -55,12 +58,18 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     wire MC_internal [49:0];
     wire [DATA_WIDTH-1:0] Lq [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH-1:0] highq [NUM_MULTIPLIERS-1:0];
-    wire [DATA_WIDTH-1:0] BLB, C0L, WL_SL, stored_value_bar1, stored_value_bar2, out1,out2;
+    wire [DATA_WIDTH-1:0] BLB,  stored_value_bar1, stored_value_bar2, out1,out2;
+    wire [DATA_WIDTH-1:0] C0L;
+    wire [DATA_WIDTH-1:0] WL_SL;
+    
+    
     
     wire [DATA_WIDTH:0] S [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH:0] S_not [NUM_MULTIPLIERS-1:0];
-    wire WL_N, WL_SH, rst;
-    wire [NUM_MULTIPLIERS-1:0] OUT; //A
+    wire WL_N;
+    wire WL_SH;
+    wire rst;
+    wire [NUM_MULTIPLIERS-1:0] OUT [49:0]; //A
     wire [(1<<MAIN_ADDRESS_BITS)-1:0] Dout;
     assign BLB = ~BL;
     
@@ -85,6 +94,12 @@ generate
     .read(read),//ok
     .write(write),//ok
     .mem_out(imcu), 
+    .OUT(OUT[i]),
+    .WL_N(WL_N),
+    .WL_SH(WL_SH),
+    .rst(rst),
+    .C0L(C0L),
+    .WL_SL(WL_SL),
     .latch_MC_En(latch_MC_En_internal[i]),//ok
     .MC(MC_internal[i]),//ok
     .tree_out_lsw(output_buffer_lsw[i]),// lower 8 bits of output buffer
@@ -92,6 +107,22 @@ generate
     );
     end
     endgenerate
+    
+genvar s;
+generate
+    for(s=0;s<50;s=s+1) begin: IB_Gen
+    INPUT_BUFFER #(.ADDR(IB_ADDRESS_BITS),
+                       .DATA_WIDTH(DATA_WIDTH),
+                       .X(NUM_MULTIPLIERS)) IB1(clk,address_input_buffer, BLA, EN_IB[s],C0L,OUT[s]);
+    end
+endgenerate
+
+
+
+WEIGHT_BUFFER WB(clk,address_weight_buffer, BL, OUT[0]);
+Timing_control #(.DATA_WIDTH(DATA_WIDTH)) TC1(clk, IMC, WL_N, WL_SH, rst, C0L, WL_SL);
+
+
 
 genvar j;
 generate
