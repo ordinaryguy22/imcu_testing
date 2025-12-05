@@ -28,9 +28,10 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
                 address_input_buffer,
 				address_main_memory,
 				address_weight_buffer,
-
 				BL, 
 				BLA, 
+				W_EN, 
+				Read_EN,
 				clk,
 				IMC,
 				EN_IB,
@@ -48,7 +49,9 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     input clk, IMC,EN_W, read,write;
     input [49:0] EN_IB;
     input [DATA_WIDTH-1:0] BL, BLA;
+    input Read_EN,W_EN;
     input [4:0] address_weight_buffer;
+    
     output [DATA_WIDTH-1:0]mem_out;
     output reg   MC ;
     output reg latch_MC_En  ;
@@ -71,6 +74,7 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     wire rst;
     wire [NUM_MULTIPLIERS-1:0] OUT [49:0]; //A
     wire [(1<<MAIN_ADDRESS_BITS)-1:0] Dout;
+    wire [DATA_WIDTH-1:0] OUT_WB;
     assign BLB = ~BL;
     
     wire [(2*DATA_WIDTH)-1:0] m [49:0];
@@ -85,8 +89,8 @@ generate
     IMCU IMCU_init (
     .address_input_buffer(address_input_buffer), //ok
     .address_main_memory(address_main_memory), //ok
-    .BL(BL),//ok
-    .BLA(BLA),//ok
+    .BL(OUT_WB),//ok
+    .BLA(OUT_WB),//ok
     .clk(clk),//ok
     .IMC(IMC),//ok
     .EN_IB(EN_IB[i]),//ok
@@ -119,7 +123,8 @@ endgenerate
 
 
 
-WEIGHT_BUFFER WB(clk,address_weight_buffer, BL, OUT[0]);
+WEIGHT_BUFFER WB(clk,address_weight_buffer, BL, OUT_WB,Read_EN,W_EN);
+
 Timing_control #(.DATA_WIDTH(DATA_WIDTH)) TC1(clk, IMC, WL_N, WL_SH, rst, C0L, WL_SL);
 
 

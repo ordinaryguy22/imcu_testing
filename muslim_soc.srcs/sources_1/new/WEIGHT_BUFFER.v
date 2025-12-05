@@ -22,30 +22,42 @@
 module WEIGHT_BUFFER #(parameter ADDR = 5,parameter DATA_WIDTH = 8,
                   
                       parameter X=16)
-                      (clk,Address, BL , OUT); // EN IS AN INPUT TOO
+                      (clk,Address, BL , OUT, Read_EN,W_EN); // EN IS AN INPUT TOO
 input [ADDR-1:0] Address;
 input [DATA_WIDTH-1:0] BL;
 input clk;
-// input EN;
-output [DATA_WIDTH-1:0] OUT;
+input Read_EN;
+input W_EN;
+output reg [DATA_WIDTH-1:0] OUT;
 
 
 wire [X-1 :0] DOUT ;
 
 
 reg [DATA_WIDTH-1 :0] weight_data [X-1:0]  ;
+reg [DATA_WIDTH-1:0] BL_reg;
 
-
-//Decoder #(.N(ADDR),.X(X))AddressDecoder(Address ,EN, DOUT);
-integer i;
+/*integer i;
 initial begin
 for(i =0;i<16;i=i+1) begin
 weight_data[i]<=0;
+end*/
+
+//end
+
+always@(posedge clk)begin
+BL_reg <= BL;
+if(W_EN) begin
+weight_data[Address] <= BL_reg;
 end
 
+else if (Read_EN) 
+OUT<=weight_data[Address];
+
+else begin
+OUT<=8'b0;
 end
-always@(posedge clk)begin
-weight_data[Address] <= BL;
+
 end
 
 

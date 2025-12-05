@@ -40,6 +40,7 @@ module main_interface(
 	wire rst;
 	wire start;
 	wire IMC;
+	wire Read_EN,W_EN;
 	wire latch_MC_En;
 	wire [2:0]  dmem_addrs_stride;
 	wire [2:0]  imcu_addrs_stride;
@@ -125,6 +126,8 @@ module main_interface(
 		 .latch_En           (latch_En),
 		// .dma_has_access(),//.dma_has_access(dma_has_access),
 		 .dma_stall          (dma_stall)  ,
+		.Read_EN(Read_EN),
+        .W_EN(W_EN),
 		 .address_weight_buffer (address_weight_buffer)                      
 	);
 	
@@ -139,6 +142,8 @@ module main_interface(
                        .IMC(IMC),
                        .EN_IB(EN_IB),
                        .EN_W(EN_W),
+                       .Read_EN(Read_EN),
+                       .W_EN(W_EN),
                        .read(read_imcu),
                        .write(write_imcu),
                        .mem_out(imcu_out), 

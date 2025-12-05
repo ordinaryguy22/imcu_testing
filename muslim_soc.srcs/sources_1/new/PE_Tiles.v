@@ -94,7 +94,7 @@ generate
         assign m[j] = {output_buffer_msw[j], output_buffer_lsw[j]};
     end
 endgenerate
-  
+
 adder_tree u_adder_tree (
     .A1 (m[0]),   .A2 (m[1]),   .A3 (m[2]),   .A4 (m[3]),   .A5 (m[4]),
     .A6 (m[5]),   .A7 (m[6]),   .A8 (m[7]),   .A9 (m[8]),   .A10(m[9]),
