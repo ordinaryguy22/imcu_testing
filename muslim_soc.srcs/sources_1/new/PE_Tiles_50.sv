@@ -25,12 +25,30 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
               parameter MAIN_ADDRESS_BITS = $clog2(NUM_MULTIPLIERS * 3),
               parameter IB_ADDRESS_BITS = $clog2(NUM_MULTIPLIERS * 3 / 2)
               )(
-                address_input_buffer,
+        /*        address_input_buffer,
 				address_main_memory,
 				address_weight_buffer,
 				BL, 
-				BLA, 
-				W_EN, 
+				BLA, */
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB0,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB1,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB2,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB3,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB4,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB5,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB6,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB7,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB8,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB9,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB10,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB11,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB12,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB13,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB14,
+				input  [NUM_MULTIPLIERS-1:0] OUT_IB15,
+
+
+		/*	    W_EN, 
 				Read_EN,
 				clk,
 				IMC,
@@ -41,21 +59,22 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
 				mem_out,
 				latch_MC_En,
 				MC,
-				MAC_result
+				MAC_result*/
+				input [IB_ADDRESS_BITS-1:0] address_input_buffer,
+                    input [MAIN_ADDRESS_BITS-1:0] address_main_memory,
+                    input clk, IMC,EN_W, read,write,
+                    input [49:0] EN_IB,
+                    input [DATA_WIDTH-1:0] BL, BLA,
+                    input Read_EN,W_EN,
+                    input [4:0] address_weight_buffer,
+                    
+                    output [DATA_WIDTH-1:0]mem_out,
+                    output reg   MC ,
+                    output reg latch_MC_En ,
+                    output [DATA_WIDTH-1:0] MAC_result
     );
     
-input [IB_ADDRESS_BITS-1:0] address_input_buffer;
-    input [MAIN_ADDRESS_BITS-1:0] address_main_memory;
-    input clk, IMC,EN_W, read,write;
-    input [49:0] EN_IB;
-    input [DATA_WIDTH-1:0] BL, BLA;
-    input Read_EN,W_EN;
-    input [4:0] address_weight_buffer;
-    
-    output [DATA_WIDTH-1:0]mem_out;
-    output reg   MC ;
-    output reg latch_MC_En  ;
-    output [DATA_WIDTH-1:0] MAC_result;
+
     
     wire latch_MC_En_internal [49:0];
     wire MC_internal [49:0];
@@ -72,7 +91,7 @@ input [IB_ADDRESS_BITS-1:0] address_input_buffer;
     wire WL_N;
     wire WL_SH;
     wire rst;
-    wire [NUM_MULTIPLIERS-1:0] OUT [49:0]; //A
+//    wire [NUM_MULTIPLIERS-1:0] OUT [49:0]; //A
     wire [(1<<MAIN_ADDRESS_BITS)-1:0] Dout;
     wire [DATA_WIDTH-1:0] OUT_WB;
     assign BLB = ~BL;
@@ -98,7 +117,7 @@ generate
     .read(read),//ok
     .write(write),//ok
     .mem_out(imcu), 
-    .OUT(OUT[i]),
+    .OUT(OUT_IB),
     .WL_N(WL_N),
     .WL_SH(WL_SH),
     .rst(rst),
@@ -112,20 +131,20 @@ generate
     end
     endgenerate
     
-genvar s;
-generate
-    for(s=0;s<50;s=s+1) begin: IB_Gen
-    INPUT_BUFFER #(.ADDR(IB_ADDRESS_BITS),
-                       .DATA_WIDTH(DATA_WIDTH),
-                       .X(NUM_MULTIPLIERS)) IB1(clk,address_input_buffer, BLA, EN_IB[s],C0L,OUT[s]);
-    end
-endgenerate
+//genvar s;
+//generate
+//    for(s=0;s<50;s=s+1) begin: IB_Gen
+//    INPUT_BUFFER #(.ADDR(IB_ADDRESS_BITS),
+//                       .DATA_WIDTH(DATA_WIDTH),
+//                       .X(NUM_MULTIPLIERS)) IB1(clk,address_input_buffer, BLA, EN_IB[s],C0L,OUT[s]);
+//    end
+//endgenerate
 
 
 
 WEIGHT_BUFFER WB(clk,address_weight_buffer, BL, OUT_WB,Read_EN,W_EN);
 
-Timing_control #(.DATA_WIDTH(DATA_WIDTH)) TC1(clk, IMC, WL_N, WL_SH, rst, C0L, WL_SL);
+//Timing_control #(.DATA_WIDTH(DATA_WIDTH)) TC1(clk, IMC, WL_N, WL_SH, rst, C0L, WL_SL);
 
 
 
