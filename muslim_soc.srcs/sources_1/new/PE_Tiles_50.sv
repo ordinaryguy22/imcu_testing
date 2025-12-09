@@ -30,22 +30,22 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
 				address_weight_buffer,
 				BL, 
 				BLA, */
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB0,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB1,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB2,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB3,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB4,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB5,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB6,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB7,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB8,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB9,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB10,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB11,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB12,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB13,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB14,
-				input  [NUM_MULTIPLIERS-1:0] OUT_IB15,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB0,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB1,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB2,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB3,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB4,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB5,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB6,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB7,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB8,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB9,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB10,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB11,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB12,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB13,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB14,
+//				input  [NUM_MULTIPLIERS-1:0] OUT_IB15,
 
 
 		/*	    W_EN, 
@@ -62,11 +62,16 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
 				MAC_result*/
 				input [IB_ADDRESS_BITS-1:0] address_input_buffer,
                     input [MAIN_ADDRESS_BITS-1:0] address_main_memory,
+                    input [799:0] OUT_IB,
                     input clk, IMC,EN_W, read,write,
                     input [49:0] EN_IB,
                     input [DATA_WIDTH-1:0] BL, BLA,
                     input Read_EN,W_EN,
                     input [4:0] address_weight_buffer,
+                    input WL_N,
+                    input WL_SH,
+                    input [DATA_WIDTH-1:0] WL_SL,
+
                     
                     output [DATA_WIDTH-1:0]mem_out,
                     output reg   MC ,
@@ -82,14 +87,12 @@ module PE_Tiles_50 #(parameter DATA_WIDTH = 8,
     wire [DATA_WIDTH-1:0] highq [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH-1:0] BLB,  stored_value_bar1, stored_value_bar2, out1,out2;
     wire [DATA_WIDTH-1:0] C0L;
-    wire [DATA_WIDTH-1:0] WL_SL;
     
     
     
     wire [DATA_WIDTH:0] S [NUM_MULTIPLIERS-1:0];
     wire [DATA_WIDTH:0] S_not [NUM_MULTIPLIERS-1:0];
-    wire WL_N;
-    wire WL_SH;
+
     wire rst;
 //    wire [NUM_MULTIPLIERS-1:0] OUT [49:0]; //A
     wire [(1<<MAIN_ADDRESS_BITS)-1:0] Dout;
@@ -117,7 +120,7 @@ generate
     .read(read),//ok
     .write(write),//ok
     .mem_out(imcu), 
-    .OUT(OUT_IB),
+    .OUT(OUT_IB[i*16+:16]),
     .WL_N(WL_N),
     .WL_SH(WL_SH),
     .rst(rst),

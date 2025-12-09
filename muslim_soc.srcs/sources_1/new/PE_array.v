@@ -48,17 +48,21 @@ module PE_array  #(parameter DATA_WIDTH = 8,
                                  input [49:0] EN_IB,
                                  input [DATA_WIDTH-1:0] BL, BLA,
                                  input Read_EN,W_EN,
+                                 input [1:0] EN_WB,
                                  input [4:0] address_weight_buffer,
                                  
+                                 output [DATA_WIDTH-1:0] WL_SL,
+                                 output WL_N,
+                                 output WL_SH,
                                  output [DATA_WIDTH-1:0]mem_out,
-                                 output reg   MC ,
-                                 output reg latch_MC_En  
+                                 output    MC ,
+                                 output  latch_MC_En  
                              
 
     );
     
 
-        reg [DATA_WIDTH-1:0] MAC_result [49:0];
+        wire [DATA_WIDTH-1:0] MAC_result [49:0];
         
         wire latch_MC_En_internal [49:0];
         wire MC_internal [49:0];
@@ -66,16 +70,15 @@ module PE_array  #(parameter DATA_WIDTH = 8,
         wire [DATA_WIDTH-1:0] highq [NUM_MULTIPLIERS-1:0];
         wire [DATA_WIDTH-1:0] BLB,  stored_value_bar1, stored_value_bar2, out1,out2;
         wire [DATA_WIDTH-1:0] C0L;
-        wire [DATA_WIDTH-1:0] WL_SL;
         
         
         
         wire [DATA_WIDTH:0] S [NUM_MULTIPLIERS-1:0];
         wire [DATA_WIDTH:0] S_not [NUM_MULTIPLIERS-1:0];
-        wire WL_N;
-        wire WL_SH;
+
         wire rst;
-        wire [NUM_MULTIPLIERS-1:0] OUT [49:0]; //A
+//        wire [NUM_MULTIPLIERS-1:0] OUT [49:0]; //A
+        wire [799:0] OUT;
         wire [(1<<MAIN_ADDRESS_BITS)-1:0] Dout;
         wire [DATA_WIDTH-1:0] OUT_WB;
         assign BLB = ~BL;
@@ -88,19 +91,24 @@ module PE_array  #(parameter DATA_WIDTH = 8,
     
     genvar i;
     generate 
-    for (i=0;i<50;i=i+1)begin:rows_inst
+    for (i=0;i<2;i=i+1)begin:rows_inst
     PE_Tiles_50 PE_rows(
+                         .WL_N(WL_N), .WL_SH(WL_SH),.WL_SL(WL_SL),
                          .address_input_buffer(address_input_buffer),
                            .address_main_memory(address_main_memory),
-                           .BL(DMA_RData), //weightsssss
-                           .BLA(DMA_RData), //inputttttt
+                           .address_weight_buffer(address_weight_buffer),
+
+                           .BL(BL), //weightsssss
+                           .BLA(BLA), //inputttttt
                            .clk(clk), //ok
                            .IMC(IMC), //ok
                            .EN_IB(EN_IB),
+                           .Read_EN(Read_EN),
+                           .W_EN(EN_WB[i]),
                            .EN_W(EN_W),
-                           .OUT_IB(OUT_IB[i]),
-                           .read(read_imcu),
-                           .write(write_imcu),
+                           .OUT_IB(OUT),
+                           .read(read),
+                           .write(write),
                            .mem_out(imcu_out), 
                            .latch_MC_En(latch_MC_En),
                            .MC(MC),
@@ -115,7 +123,7 @@ module PE_array  #(parameter DATA_WIDTH = 8,
          INPUT_BUFFER #(.ADDR(IB_ADDRESS_BITS),
                         .DATA_WIDTH(DATA_WIDTH),
                         .X(NUM_MULTIPLIERS))
-                        IB1(clk,address_input_buffer, BLA, EN_IB[s],C0L,OUT_IB[s]);
+                        IB1(clk,address_input_buffer, BLA, EN_IB[s],C0L,OUT[s*16+:16]);
      end
    endgenerate
    

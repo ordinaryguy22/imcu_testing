@@ -31,24 +31,23 @@ input W_EN;
 output reg [DATA_WIDTH-1:0] OUT;
 
 
-wire [X-1 :0] DOUT ;
 
 
 reg [DATA_WIDTH-1 :0] weight_data [X-1:0]  ;
 reg [DATA_WIDTH-1:0] BL_reg;
 
-/*integer i;
+integer i;
 initial begin
 for(i =0;i<16;i=i+1) begin
 weight_data[i]<=0;
-end*/
+end
 
-//end
+end
 
 always@(posedge clk)begin
-BL_reg <= BL;
+//BL_reg <= BL;
 if(W_EN) begin
-weight_data[Address] <= BL_reg;
+weight_data[Address] <= BL;
 end
 
 else if (Read_EN) 

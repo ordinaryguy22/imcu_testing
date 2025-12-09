@@ -4,7 +4,8 @@ module dma_controller#(
     parameter DATA_WIDTH = 8,
     parameter NUM_LAYERS = 384/(3*DATA_WIDTH),
     parameter MAIN_ADDRESS_BITS = $clog2(NUM_LAYERS * 3),
-    parameter IB_ADDRESS_BITS = $clog2(NUM_LAYERS * 3 / 2)
+    parameter IB_ADDRESS_BITS = $clog2(NUM_LAYERS * 3 / 2),
+    parameter ROWS=2
 )(
     input         clk,
     input         reset,
@@ -34,6 +35,7 @@ module dma_controller#(
     output reg        write_imcu,
     output reg        EN_W,Read_EN,W_EN,
     output reg [49:0] EN_IB,
+    output reg [ROWS-1:0] EN_WB,
     // flags
     output         TC, // transaction complete
     output         AE, // address error
@@ -52,7 +54,9 @@ module dma_controller#(
                                   (imcu_addrs_stride == 3) ? 4'h3 : 4'hz;
 
     reg TC_reg, AE_reg; // for the Tx complete and Adredd errro
-    
+    reg[5:0] wb_count;
+    reg [63:0] EN_WB_internal;
+    wire [63:0] EN_WB_decoded;
 
     // State encoding (Decimal)
 localparam RESET                  = 0,    // 0
@@ -97,49 +101,60 @@ localparam RESET                  = 0,    // 0
                 address_main_memory  <= 0;
                 address_weight_buffer <= 0;
                 EN_IB <= EN_IB_internal;
+                EN_WB<=EN_WB_internal;
         end
         LOAD_WEIGHT_initial: begin
-            DMA_ADDRS            <= initial_addrs_data_mem;
+               DMA_ADDRS            <= initial_addrs_data_mem+(32'd16*wb_count*32'd4);
             address_weight_buffer <= 0;
+            EN_WB <= EN_WB_decoded;
+            EN_IB <= EN_IB_internal;
 
         end
-        
         
         LOAD_WEIGHT: begin
         address_weight_buffer <= address_weight_buffer + 5'b1 ;
         DMA_ADDRS            <= DMA_ADDRS + increment_value_dmem;
-
+        EN_WB<=EN_WB_decoded;
+        EN_IB <= EN_IB_internal;
         end
         CHECK_COMPLETE_final: begin
-        
         end
-        
+        LOAD_WEIGHT_final: begin
+                        wb_count<=wb_count+6'd1;
+        end
         WRITE_WEIGHT_initial: begin
                  address_weight_buffer <= 0;
                  address_main_memory  <= initial_addrs_imcu;
-                EN_IB = EN_IB_internal;
+                EN_IB <= EN_IB_internal;
+               EN_WB<=EN_WB_internal;
 
         end
         WRITE_WEIGHT:begin
                // DMA_ADDRS            <= DMA_ADDRS + increment_value_dmem;
                  address_weight_buffer <= address_weight_buffer + 5'b1 ;
                 address_main_memory  <= address_main_memory + increment_value_imcu;
-                EN_IB = EN_IB_internal;
+                EN_IB <= EN_IB_internal;
+               EN_WB<=EN_WB_internal;
+
 
         end    
         WRITE_INPUT_initial: begin
                DMA_ADDRS            <= initial_addrs_data_mem+(32'd16*ib_count*32'd4);
                address_input_buffer <= 6'b0;
-               EN_IB = EN_IB_decoded;
+               EN_IB <= EN_IB_decoded;
+               EN_WB <= EN_WB_internal;
+
 
         end
         WRITE_INPUT: begin
                 DMA_ADDRS            <= DMA_ADDRS + increment_value_dmem;
                 address_input_buffer <= address_input_buffer + 1'b1;
-                EN_IB = EN_IB_decoded;
+                EN_IB <= EN_IB_decoded;
+                EN_WB <= EN_WB_internal;
+
         end
         WRITE_INPUT_FINAL: begin
-             ib_count             = ib_count + 6'd1;
+             ib_count             <= ib_count + 6'd1;
 
         end
         IMCU_to_memory_initial: begin
@@ -208,7 +223,8 @@ localparam RESET                  = 0,    // 0
             end
     
             LOAD_WEIGHT_initial: next_state = LOAD_WEIGHT;
-            LOAD_WEIGHT_final: next_state = WRITE_WEIGHT_initial;
+            LOAD_WEIGHT_final: next_state = (wb_count==6'd2)?WRITE_WEIGHT_initial:LOAD_WEIGHT_initial;
+            LOAD_WEIGHT_final: next_state = (wb_count==6'd2)?WRITE_WEIGHT_initial:LOAD_WEIGHT_initial;
             LOAD_WEIGHT: next_state = CHECK_COMPLETE_final;
             CHECK_COMPLETE_final: next_state = (address_weight_buffer == 5'd16)? LOAD_WEIGHT_final:LOAD_WEIGHT;
             WRITE_WEIGHT_initial: next_state = CHECK_COMPLETE_W;
@@ -240,6 +256,10 @@ localparam RESET                  = 0,    // 0
     
     Decoder #(.N(6), 
               .X(1<<6)) d1(ib_count ,1, EN_IB_decoded);
+              
+              
+    Decoder #(.N(6), 
+              .X(1<<6)) d2(wb_count ,1, EN_WB_decoded);
     // Combinational logic: Output Logic
     always @(*) begin
         // Default values to prevent latch inference
@@ -253,6 +273,7 @@ localparam RESET                  = 0,    // 0
         EN_W                = 1'b0;
         EN_IB_internal      = 50'b0;
         latch_En            = 1'b0;
+        EN_WB_internal = 64'b0;
 //        AE                  = 1'b0;
 //        TC                  = 1'b0;
         case (state)
@@ -269,10 +290,13 @@ localparam RESET                  = 0,    // 0
                 write_imcu            = 1'b0;
                 EN_W                  = 1'b0;
                ib_count = 6'd0;
+               wb_count = 6'd0;
 
                 EN_IB_internal                 = 50'b0;
                 latch_En              = 1'b0;
                 W_EN                   =1'b0;
+                        EN_WB_internal = 64'b0;
+
             end
             
             LOAD_WEIGHT_initial:begin 
@@ -284,6 +308,7 @@ localparam RESET                  = 0,    // 0
             DMA_WEN              = 1'b0;
             DMA_REN              = 1'b1;
             EN_IB_internal                = 50'b0;
+
             latch_En             = 1'b0;
             imcu_mem_in          = ReadDataM;  // data from memory to IMCU[weight layer]
             end 

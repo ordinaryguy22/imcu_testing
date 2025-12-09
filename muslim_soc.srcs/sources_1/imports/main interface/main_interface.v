@@ -56,7 +56,7 @@ module main_interface(
 	wire [7:0] output_buffer_msw; //top 32 bits of output buffer
     wire [15:0] MAC_Result;
     wire [4:0] address_weight_buffer;
-    
+    wire [1:0] EN_WB;
 	interface_decoder interface_decoder_init (
         .clk(clk),
         .MemWriteM(MemWriteM),
@@ -119,7 +119,8 @@ module main_interface(
 		 .imcu_buffer_in     (imcu_buffer_in),       
 		 .read_imcu          (read_imcu),              
 		 .write_imcu         (write_imcu),             
-		 .EN_W               (EN_W),                  
+		 .EN_W               (EN_W), 
+		 .EN_WB              (EN_WB),                 
 		 .EN_IB              (EN_IB),                  
 		 .TC                 (TC),                   
 		 .AE                 (AE),                     
@@ -133,7 +134,7 @@ module main_interface(
 	
 
 	
-	PE_Tiles_50 PE_init(
+	PE_array PE_init(                   
                      .address_input_buffer(address_input_buffer),
                        .address_main_memory(address_main_memory),
                        .BL(DMA_RData), //weightsssss
@@ -142,6 +143,7 @@ module main_interface(
                        .IMC(IMC),
                        .EN_IB(EN_IB),
                        .EN_W(EN_W),
+                       .EN_WB(EN_WB),
                        .Read_EN(Read_EN),
                        .W_EN(W_EN),
                        .read(read_imcu),
@@ -149,7 +151,7 @@ module main_interface(
                        .mem_out(imcu_out), 
                        .latch_MC_En(latch_MC_En),
                        .MC(MC),
-                       .MAC_result(MAC_Result) , 
+//                       .MAC_result(MAC_Result) , 
                        .address_weight_buffer(address_weight_buffer)            
         );
 	
