@@ -1,6 +1,6 @@
 module adder_tree(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16,tree_out);
-input [16:0] A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16;
-output [16:0] tree_out;
+input [15:0] A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16;
+output [31:0] tree_out;
 
 
 wire [63:0] sum1, sum2, sum3, sum4, sum5, sum6;

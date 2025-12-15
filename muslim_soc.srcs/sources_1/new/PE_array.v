@@ -1,23 +1,4 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 12/04/2025 04:54:09 PM
-// Design Name: 
-// Module Name: PE_array
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+
 
 
 module PE_array  #(parameter DATA_WIDTH = 8,
@@ -45,10 +26,10 @@ module PE_array  #(parameter DATA_WIDTH = 8,
                                  input [IB_ADDRESS_BITS-1:0] address_input_buffer,
                                  input [MAIN_ADDRESS_BITS-1:0] address_main_memory,
                                  input clk, IMC,EN_W, read,write,
-                                 input [49:0] EN_IB,
+                                 input [15:0] EN_IB,
                                  input [DATA_WIDTH-1:0] BL, BLA,
                                  input Read_EN,W_EN,
-                                 input [1:0] EN_WB,
+                                 input [15:0] EN_WB,
                                  input [4:0] address_weight_buffer,
                                  
                                  output [DATA_WIDTH-1:0] WL_SL,
@@ -62,10 +43,10 @@ module PE_array  #(parameter DATA_WIDTH = 8,
     );
     
 
-        wire [DATA_WIDTH-1:0] MAC_result [49:0];
+        wire [DATA_WIDTH-1:0] MAC_result [15:0];
         
-        wire latch_MC_En_internal [49:0];
-        wire MC_internal [49:0];
+        wire latch_MC_En_internal [15:0];
+        wire MC_internal [15:0];
         wire [DATA_WIDTH-1:0] Lq [NUM_MULTIPLIERS-1:0];
         wire [DATA_WIDTH-1:0] highq [NUM_MULTIPLIERS-1:0];
         wire [DATA_WIDTH-1:0] BLB,  stored_value_bar1, stored_value_bar2, out1,out2;
@@ -83,17 +64,18 @@ module PE_array  #(parameter DATA_WIDTH = 8,
         wire [DATA_WIDTH-1:0] OUT_WB;
         assign BLB = ~BL;
         
-        wire [(2*DATA_WIDTH)-1:0] m [49:0];
-        wire [NUM_MULTIPLIERS-1:0] OUT_IB [49:0];
-        wire [DATA_WIDTH-1:0] output_buffer_lsw [49:0]; //lower significant word[32 bits]
-        wire [DATA_WIDTH-1:0] output_buffer_msw [49:0]; //Upper significant word[32 bits]
+        wire [(2*DATA_WIDTH)-1:0] m [15:0];
+        wire [NUM_MULTIPLIERS-1:0] OUT_IB [15:0];
+        wire [DATA_WIDTH-1:0] output_buffer_lsw [15:0]; //lower significant word[32 bits]
+        wire [DATA_WIDTH-1:0] output_buffer_msw [15:0]; //Upper significant word[32 bits]
         wire [DATA_WIDTH-1:0] output_port [(1<<MAIN_ADDRESS_BITS)-1:0];
     
     genvar i;
     generate 
-    for (i=0;i<2;i=i+1)begin:rows_inst
-    PE_Tiles_50 PE_rows(
+    for (i=0;i<16;i=i+1)begin:rows_inst
+    PE_Tiles_16 PE_rows(
                          .WL_N(WL_N), .WL_SH(WL_SH),.WL_SL(WL_SL),
+                         .rst(rst),
                          .address_input_buffer(address_input_buffer),
                            .address_main_memory(address_main_memory),
                            .address_weight_buffer(address_weight_buffer),
@@ -119,7 +101,7 @@ module PE_array  #(parameter DATA_WIDTH = 8,
             
   genvar s;
   generate
-     for(s=0;s<50;s=s+1) begin: IB_Gen
+     for(s=0;s<16;s=s+1) begin: IB_Gen
          INPUT_BUFFER #(.ADDR(IB_ADDRESS_BITS),
                         .DATA_WIDTH(DATA_WIDTH),
                         .X(NUM_MULTIPLIERS))

@@ -5,7 +5,7 @@ module dma_controller#(
     parameter NUM_LAYERS = 384/(3*DATA_WIDTH),
     parameter MAIN_ADDRESS_BITS = $clog2(NUM_LAYERS * 3),
     parameter IB_ADDRESS_BITS = $clog2(NUM_LAYERS * 3 / 2),
-    parameter ROWS=2
+    parameter ROWS=16
 )(
     input         clk,
     input         reset,
@@ -34,7 +34,7 @@ module dma_controller#(
     output reg        read_imcu,
     output reg        write_imcu,
     output reg        EN_W,Read_EN,W_EN,
-    output reg [49:0] EN_IB,
+    output reg [15:0] EN_IB,
     output reg [ROWS-1:0] EN_WB,
     // flags
     output         TC, // transaction complete
@@ -223,8 +223,7 @@ localparam RESET                  = 0,    // 0
             end
     
             LOAD_WEIGHT_initial: next_state = LOAD_WEIGHT;
-            LOAD_WEIGHT_final: next_state = (wb_count==6'd2)?WRITE_WEIGHT_initial:LOAD_WEIGHT_initial;
-            LOAD_WEIGHT_final: next_state = (wb_count==6'd2)?WRITE_WEIGHT_initial:LOAD_WEIGHT_initial;
+            LOAD_WEIGHT_final: next_state = (wb_count==6'd16)?WRITE_WEIGHT_initial:LOAD_WEIGHT_initial;
             LOAD_WEIGHT: next_state = CHECK_COMPLETE_final;
             CHECK_COMPLETE_final: next_state = (address_weight_buffer == 5'd16)? LOAD_WEIGHT_final:LOAD_WEIGHT;
             WRITE_WEIGHT_initial: next_state = CHECK_COMPLETE_W;
@@ -239,7 +238,7 @@ localparam RESET                  = 0,    // 0
             WRITE_INPUT_initial:  next_state = CHECK_COMPLETE_IB;
             WRITE_INPUT:          next_state = CHECK_COMPLETE_IB;
             CHECK_COMPLETE_IB:    next_state = (address_input_buffer == 6'd16) ? WRITE_INPUT_FINAL:WRITE_INPUT ;
-            WRITE_INPUT_FINAL:    next_state = (ib_count==6'd50)?DONE:WRITE_INPUT_initial;
+            WRITE_INPUT_FINAL:    next_state = (ib_count==6'd16)?DONE:WRITE_INPUT_initial;
             
             IMCU_to_memory_initial: next_state = CHECK_COMPLETE_MEM;
             IMCU_to_memory:         next_state = CHECK_COMPLETE_MEM;

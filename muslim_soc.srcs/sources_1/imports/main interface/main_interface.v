@@ -57,6 +57,8 @@ module main_interface(
     wire [15:0] MAC_Result;
     wire [4:0] address_weight_buffer;
     wire [1:0] EN_WB;
+    
+    
 	interface_decoder interface_decoder_init (
         .clk(clk),
         .MemWriteM(MemWriteM),
